@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+option go_package="./";
+
+message SendSmsRequest {
+  string mobile=1;
+  string SendSmsCode=2;
+}
+
+message SendSmsResponse {
+
+}
+
+message LoginRequest {
+  string mobile=1;
+  string SendSmsCode=2;
+}
+
+message LoginResponse {
+  int64 Id= 1;
+}
+
+service User {
+  rpc SendSms(SendSmsRequest) returns(SendSmsResponse);
+  rpc Login(LoginRequest) returns(LoginResponse);
+}
