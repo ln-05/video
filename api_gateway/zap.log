@@ -1,0 +1,7 @@
+2025-05-23T17:02:12.147+0800	INFO	inits/mysql.go:21	mysql连接成功
+2025-05-23T17:02:12.174+0800	INFO	inits/redis.go:21	redis连接成功
+2025-05-23T17:29:37.934+0800	INFO	inits/mysql.go:21	mysql连接成功
+2025-05-23T17:29:37.970+0800	INFO	inits/redis.go:21	redis连接成功
+2025-05-23T17:30:26.558+0800	INFO	inits/mysql.go:21	mysql连接成功
+2025-05-23T17:30:26.623+0800	INFO	inits/redis.go:21	redis连接成功
+2025-05-29T09:44:33.728+0800	INFO	inits/nacos.go:58	配置热更新成功

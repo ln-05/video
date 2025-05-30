@@ -1,0 +1,5 @@
+NamespaceID: "b5be7cb2-7144-46de-b174-f0a72925bbfb"
+DataId: "shopconfig"
+Group: "shop_nacos"
+IdAddr: "14.103.168.20"
+Port: 8848
