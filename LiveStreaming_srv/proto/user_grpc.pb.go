@@ -19,8 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	User_SendSms_FullMethodName = "/proto.User/SendSms"
-	User_Login_FullMethodName   = "/proto.User/Login"
+	User_SendSms_FullMethodName        = "/proto.User/SendSms"
+	User_Login_FullMethodName          = "/proto.User/Login"
+	User_PublishContent_FullMethodName = "/proto.User/PublishContent"
+	User_UpdateStatus_FullMethodName   = "/proto.User/UpdateStatus"
 )
 
 // UserClient is the client API for User service.
@@ -29,6 +31,8 @@ const (
 type UserClient interface {
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error)
+	UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error)
 }
 
 type userClient struct {
@@ -59,12 +63,34 @@ func (c *userClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishContentResponse)
+	err := c.cc.Invoke(ctx, User_PublishContent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateStatusResponse)
+	err := c.cc.Invoke(ctx, User_UpdateStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error)
+	UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -77,6 +103,12 @@ func (UnimplementedUserServer) SendSms(context.Context, *SendSmsRequest) (*SendS
 }
 func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServer) PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishContent not implemented")
+}
+func (UnimplementedUserServer) UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStatus not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -127,6 +159,42 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_PublishContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).PublishContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_PublishContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).PublishContent(ctx, req.(*PublishContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateStatus(ctx, req.(*UpdateStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +209,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _User_Login_Handler,
+		},
+		{
+			MethodName: "PublishContent",
+			Handler:    _User_PublishContent_Handler,
+		},
+		{
+			MethodName: "UpdateStatus",
+			Handler:    _User_UpdateStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

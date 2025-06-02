@@ -41,41 +41,6 @@ func Sendsms(c *gin.Context) {
 	})
 }
 
-//func Login(c *gin.Context) {
-//	var req request.Login
-//	if err := c.ShouldBind(&req); err != nil {
-//		c.JSON(http.StatusOK, gin.H{
-//			"code": 500,
-//			"msg":  "参数验证失败",
-//			"data": nil,
-//		})
-//		return
-//	}
-//
-//	conn, err := grpc.NewClient("127.0.0.1:8803", grpc.WithTransportCredentials(insecure.NewCredentials()))
-//	if err != nil {
-//		log.Fatalf("did not connect: %v", err)
-//	}
-//	defer conn.Close()
-//
-//	client := __.NewUserClient(conn)
-//
-//	re, _ := client.Login(c, &__.LoginRequest{
-//		Mobile:      req.Mobile,
-//		SendSmsCode: req.SendSmsCode,
-//	})
-//
-//	token, _ := pkg.NewJWT("2211a").CreateToken(pkg.CustomClaims{
-//		ID: uint(re.Id),
-//	})
-//
-//	c.JSON(http.StatusOK, gin.H{
-//		"code": 200,
-//		"msg":  "登录成功",
-//		"data": token,
-//	})
-//}
-
 func Login(c *gin.Context) {
 	var req request.Login
 	if err := c.ShouldBind(&req); err != nil {
@@ -87,7 +52,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// 连接服务
 	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -101,7 +65,6 @@ func Login(c *gin.Context) {
 
 	client := __.NewUserClient(conn)
 
-	// 调用登录服务并检查错误
 	re, err := client.Login(c, &__.LoginRequest{
 		Mobile:      req.Mobile,
 		SendSmsCode: req.SendSmsCode,
@@ -144,5 +107,72 @@ func Login(c *gin.Context) {
 		"code": 200,
 		"msg":  "登录成功",
 		"data": token,
+	})
+}
+
+func PublishContent(c *gin.Context) {
+	var req request.PublishContents
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 500,
+			"msg":  "参数验证失败",
+			"data": nil,
+		})
+		return
+	}
+
+	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	client := __.NewUserClient(conn)
+
+	content, _ := client.PublishContent(c, &__.PublishContentRequest{
+		UserId:      req.UserId,
+		Title:       req.Title,
+		Desc:        req.Desc,
+		MusicId:     req.MusicId,
+		WorkType:    req.WorkType,
+		CheckStatus: req.CheckStatus,
+		CheckUser:   req.CheckUser,
+		IpAddress:   req.IpAddress,
+	})
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "发布成功",
+		"data": content,
+	})
+}
+
+func UpdateStatus(c *gin.Context) {
+	var req request.UpdateStatus
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 500,
+			"msg":  "参数验证失败",
+			"data": nil,
+		})
+		return
+	}
+
+	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	client := __.NewUserClient(conn)
+
+	client.UpdateStatus(c, &__.UpdateStatusRequest{
+		Id:          req.Id,
+		CheckStatus: req.CheckStatus,
+	})
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "审核成功",
 	})
 }

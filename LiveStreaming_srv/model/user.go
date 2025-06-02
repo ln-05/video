@@ -23,7 +23,6 @@ type VideoUser struct {
 	AuthrityType  string  `gorm:"column:authrity_type;type:varchar(20);comment:认证类型;default:NULL;" json:"authrity_type"`  // 认证类型
 }
 
-// TableName 指定GORM表名
 func (u *VideoUser) TableName() string {
 	return "video_user"
 }

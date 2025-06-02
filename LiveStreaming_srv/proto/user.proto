@@ -7,7 +7,6 @@ message SendSmsRequest {
   string mobile=1;
   string SendSmsCode=2;
 }
-
 message SendSmsResponse {
 
 }
@@ -16,12 +15,47 @@ message LoginRequest {
   string mobile=1;
   string SendSmsCode=2;
 }
-
 message LoginResponse {
   int64 Id= 1;
 }
 
+
+
+
+
+
+
+message PublishContentRequest {
+  int64 user_id = 1;
+  string title = 2;
+  string desc = 3;
+  int64 music_id = 4;
+  string work_type=5;
+  string check_status=6;
+  int64 check_user=7;
+  string ip_address=8;
+}
+
+
+message PublishContentResponse {
+  int64 content_id = 1;
+  string status = 2;
+}
+
+message UpdateStatusRequest {
+  int64 id = 1;
+  string check_status=6;
+}
+
+
+message UpdateStatusResponse {
+
+}
+
+
 service User {
   rpc SendSms(SendSmsRequest) returns(SendSmsResponse);
   rpc Login(LoginRequest) returns(LoginResponse);
+  rpc PublishContent(PublishContentRequest) returns(PublishContentResponse);
+  rpc UpdateStatus(UpdateStatusRequest) returns(UpdateStatusResponse);
 }

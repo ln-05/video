@@ -10,6 +10,9 @@ func LoadRouter(r *gin.Engine) {
 	{
 		g.POST("/sendsms", hander.Sendsms)
 		g.POST("/login", hander.Login)
+		//g.Use(pkg.JWTAuth("2211a"))
+		g.POST("/publishContent", hander.PublishContent)
+		g.POST("/updateStatus", hander.UpdateStatus)
 	}
 
 }
