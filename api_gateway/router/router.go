@@ -13,6 +13,7 @@ func LoadRouter(r *gin.Engine) {
 		//g.Use(pkg.JWTAuth("2211a"))
 		g.POST("/publishContent", hander.PublishContent)
 		g.POST("/updateStatus", hander.UpdateStatus)
+		g.POST("/realname", hander.Realname)
 	}
 
 }

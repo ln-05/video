@@ -23,3 +23,8 @@ type UpdateStatus struct {
 	Id          int64  `form:"id" binding:"required"`
 	CheckStatus string `form:"checkstatus" binding:"required"`
 }
+type Realname struct {
+	UserId   int64  `form:"user_id" binding:"required"`
+	NickName string `form:"nick_name" binding:"required"`
+	Mobile   int64  `form:"mobile" binding:"required"`
+}

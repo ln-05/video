@@ -21,6 +21,7 @@ type VideoUser struct {
 	Age           int     `gorm:"column:age;type:int;comment:年龄;default:NULL;" json:"age"`                                // 年龄
 	OnlineStatus  string  `gorm:"column:online_status;type:varchar(20);comment:在线状态;default:NULL;" json:"online_status"`  // 在线状态
 	AuthrityType  string  `gorm:"column:authrity_type;type:varchar(20);comment:认证类型;default:NULL;" json:"authrity_type"`  // 认证类型
+	IdCard        string  `gorm:"column:id_card;type:char(18);comment:身份证号;default:NULL;" json:"id_card"`                 // 身份证号
 }
 
 func (u *VideoUser) TableName() string {

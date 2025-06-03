@@ -20,11 +20,6 @@ message LoginResponse {
 }
 
 
-
-
-
-
-
 message PublishContentRequest {
   int64 user_id = 1;
   string title = 2;
@@ -47,9 +42,17 @@ message UpdateStatusRequest {
   string check_status=6;
 }
 
-
 message UpdateStatusResponse {
 
+}
+
+message RealNameRequest {
+  int64  userid = 1;
+  string nick_name = 2;
+  string mobile = 3;
+}
+
+message RealNameResponse {
 }
 
 
@@ -58,4 +61,5 @@ service User {
   rpc Login(LoginRequest) returns(LoginResponse);
   rpc PublishContent(PublishContentRequest) returns(PublishContentResponse);
   rpc UpdateStatus(UpdateStatusRequest) returns(UpdateStatusResponse);
+  rpc RealName(RealNameRequest) returns(RealNameResponse); // 实名认证
 }

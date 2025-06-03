@@ -2,9 +2,7 @@ module LiveStreaming_srv
 
 go 1.23
 
-require (
-	github.com/spf13/viper v1.20.1
-)
+require github.com/spf13/viper v1.20.1
 
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect

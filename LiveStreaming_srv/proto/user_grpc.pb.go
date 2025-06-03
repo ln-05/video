@@ -23,6 +23,7 @@ const (
 	User_Login_FullMethodName          = "/proto.User/Login"
 	User_PublishContent_FullMethodName = "/proto.User/PublishContent"
 	User_UpdateStatus_FullMethodName   = "/proto.User/UpdateStatus"
+	User_RealName_FullMethodName       = "/proto.User/RealName"
 )
 
 // UserClient is the client API for User service.
@@ -33,6 +34,7 @@ type UserClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error)
 	UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error)
+	RealName(ctx context.Context, in *RealNameRequest, opts ...grpc.CallOption) (*RealNameResponse, error)
 }
 
 type userClient struct {
@@ -83,6 +85,16 @@ func (c *userClient) UpdateStatus(ctx context.Context, in *UpdateStatusRequest, 
 	return out, nil
 }
 
+func (c *userClient) RealName(ctx context.Context, in *RealNameRequest, opts ...grpc.CallOption) (*RealNameResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RealNameResponse)
+	err := c.cc.Invoke(ctx, User_RealName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -91,6 +103,7 @@ type UserServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error)
 	UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error)
+	RealName(context.Context, *RealNameRequest) (*RealNameResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -109,6 +122,9 @@ func (UnimplementedUserServer) PublishContent(context.Context, *PublishContentRe
 }
 func (UnimplementedUserServer) UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateStatus not implemented")
+}
+func (UnimplementedUserServer) RealName(context.Context, *RealNameRequest) (*RealNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RealName not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -195,6 +211,24 @@ func _User_UpdateStatus_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_RealName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RealNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RealName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RealName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RealName(ctx, req.(*RealNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -217,6 +251,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateStatus",
 			Handler:    _User_UpdateStatus_Handler,
+		},
+		{
+			MethodName: "RealName",
+			Handler:    _User_RealName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

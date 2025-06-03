@@ -5,7 +5,9 @@ import (
 	"LiveStreaming_srv/model"
 	__ "LiveStreaming_srv/proto"
 	"context"
+	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -144,5 +146,32 @@ func (c *UserServer) UpdateStatus(_ context.Context, in *__.UpdateStatusRequest)
 	}
 
 	return &__.UpdateStatusResponse{}, nil
+
+}
+
+func (c *UserServer) RealName(_ context.Context, in *__.RealNameRequest) (*__.RealNameResponse, error) {
+
+	user := model.VideoUser{}
+	err := global.DB.Where("id = ?", in.Userid).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("用户不存在")
+		}
+		return nil, fmt.Errorf("查询用户失败")
+	}
+
+	if user.NickName == "" {
+		return nil, fmt.Errorf("用户已经实名认证")
+	}
+
+	user.NickName = in.NickName
+	user.Mobile = in.Mobile
+	user.Status = "1"
+
+	if err = global.DB.Save(&user).Error; err != nil {
+		return nil, fmt.Errorf("保存实名认证信息失败")
+	}
+
+	return &__.RealNameResponse{}, nil
 
 }
