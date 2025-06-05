@@ -5,9 +5,7 @@ import (
 	"LiveStreaming_srv/model"
 	__ "LiveStreaming_srv/proto"
 	"context"
-	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -113,65 +111,114 @@ func (c *UserServer) Login(_ context.Context, in *__.LoginRequest) (*__.LoginRes
 	}, nil
 }
 
-func (c *UserServer) PublishContent(_ context.Context, in *__.PublishContentRequest) (*__.PublishContentResponse, error) {
-	work := model.VideoWorks{
-		Id:          int(in.UserId),
-		Title:       in.Title,
-		Desc:        in.Desc,
-		MusicId:     int(in.MusicId),
-		WorkType:    in.WorkType,
-		CheckStatus: in.CheckStatus,
-		CheckUser:   int(in.CheckUser),
-		IpAddress:   in.IpAddress,
-	}
-	if err := global.DB.Create(&work).Error; err != nil {
-		return nil, fmt.Errorf("作品发布失败")
+func (c *UserServer) Personal(_ context.Context, in *__.PersonalRequest) (*__.PersonalResponse, error) {
+	var user model.VideoUser
+	result := global.DB.First(&user, in.Id)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
-	return &__.PublishContentResponse{
-		ContentId: int64(work.Id),
-		Status:    "待审核状态",
+	return &__.PersonalResponse{
+		Name:          user.Name,
+		NickName:      user.NickName,
+		UserCode:      user.UserCode,
+		Signature:     user.Signature,
+		Sex:           user.Sex,
+		IpAddress:     user.IpAddress,
+		Constellation: user.Constellation,
+		AttendCount:   float32(user.AttendCount),
+		FansCount:     float32(user.FansCount),
+		ZanCount:      float32(user.ZanCount),
+		AvatorFileId:  int64(user.AvatorFileId),
+		AuthriryInfo:  user.AuthriryInfo,
+		Mobile:        user.Mobile,
+		RealNameAuth:  user.RealNameAuth,
+		Age:           user.Age,
+		OnlineStatus:  user.OnlineStatus,
+		AuthrityType:  user.AuthrityType,
+		Level:         int64(user.Level),
+		Balance:       int64(user.Balance),
+	}, nil
+}
+
+func (c *UserServer) UpdatePersonal(_ context.Context, in *__.UpdatePersonalRequest) (*__.UpdatePersonalResponse, error) {
+
+	if in.Id <= 0 {
+		return &__.UpdatePersonalResponse{
+			Code:    500,
+			Message: "无效的用户ID",
+		}, nil
+	}
+
+	var user model.VideoUser
+	if err := global.DB.First(&user, in.Id).Error; err != nil {
+		return &__.UpdatePersonalResponse{
+			Code:    500,
+			Message: "用户不存在",
+		}, nil
+	}
+	users := model.VideoUser{
+		Id:            int(in.Id),
+		Name:          in.Name,
+		NickName:      in.NickName,
+		Signature:     in.Signature,
+		Sex:           in.Sex,
+		Constellation: in.Constellation,
+		AvatorFileId:  int(in.AvatorFileId),
+		Mobile:        in.Mobile,
+		Age:           in.Age,
+		OnlineStatus:  in.OnlineStatus,
+	}
+	if err := global.DB.Updates(&users).Error; err != nil {
+		return &__.UpdatePersonalResponse{
+			Code:    500,
+			Message: "编辑个人信息失败: " + err.Error(),
+		}, nil
+	}
+
+	return &__.UpdatePersonalResponse{
+		Code:    200,
+		Message: "编辑个人信息成功",
 	}, nil
 
 }
 
-func (c *UserServer) UpdateStatus(_ context.Context, in *__.UpdateStatusRequest) (*__.UpdateStatusResponse, error) {
-	work := model.VideoWorks{
-		Id:          int(in.Id),
-		CheckStatus: in.CheckStatus,
-	}
-
-	if err := global.DB.Updates(&work).Error; err != nil {
-		return nil, fmt.Errorf("审核失败")
-	}
-
-	return &__.UpdateStatusResponse{}, nil
-
-}
-
-func (c *UserServer) RealName(_ context.Context, in *__.RealNameRequest) (*__.RealNameResponse, error) {
-
-	user := model.VideoUser{}
-	err := global.DB.Where("id = ?", in.Userid).First(&user).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("用户不存在")
-		}
-		return nil, fmt.Errorf("查询用户失败")
-	}
-
-	if user.NickName == "" {
-		return nil, fmt.Errorf("用户已经实名认证")
-	}
-
-	user.NickName = in.NickName
-	user.Mobile = in.Mobile
-	user.Status = "1"
-
-	if err = global.DB.Save(&user).Error; err != nil {
-		return nil, fmt.Errorf("保存实名认证信息失败")
-	}
-
-	return &__.RealNameResponse{}, nil
-
-}
+//func (c *UserServer) UpdateStatus(_ context.Context, in *__.UpdateStatusRequest) (*__.UpdateStatusResponse, error) {
+//	work := model.VideoWorks{
+//		Id:          int(in.Id),
+//		CheckStatus: in.CheckStatus,
+//	}
+//
+//	if err := global.DB.Updates(&work).Error; err != nil {
+//		return nil, fmt.Errorf("审核失败")
+//	}
+//
+//	return &__.UpdateStatusResponse{}, nil
+//
+//}
+//func (c *UserServer) RealName(_ context.Context, in *__.RealNameRequest) (*__.RealNameResponse, error) {
+//
+//	user := model.VideoUser{}
+//	err := global.DB.Where("id = ?", in.Userid).First(&user).Error
+//	if err != nil {
+//		if errors.Is(err, gorm.ErrRecordNotFound) {
+//			return nil, fmt.Errorf("用户不存在")
+//		}
+//		return nil, fmt.Errorf("查询用户失败")
+//	}
+//
+//	if user.NickName == "" {
+//		return nil, fmt.Errorf("用户已经实名认证")
+//	}
+//
+//	user.NickName = in.NickName
+//	user.Mobile = in.Mobile
+//	user.Status = "1"
+//
+//	if err = global.DB.Save(&user).Error; err != nil {
+//		return nil, fmt.Errorf("保存实名认证信息失败")
+//	}
+//
+//	return &__.RealNameResponse{}, nil
+//
+//}

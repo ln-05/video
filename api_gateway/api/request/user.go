@@ -9,22 +9,30 @@ type Login struct {
 	SendSmsCode string `form:"sendSmsCode" binding:"required"`
 }
 
-type PublishContents struct {
-	UserId      int64  `form:"userid" binding:"required"`
-	Title       string `form:"title" binding:"required"`
-	Desc        string `form:"desc" binding:"required"`
-	MusicId     int64  `form:"musicid" binding:"required"`
-	WorkType    string `form:"worktype" binding:"required"`
-	CheckStatus string `form:"checkstatus" binding:"required"`
-	CheckUser   int64  `form:"checkuser" binding:"required"`
-	IpAddress   string `form:"ipaddress" binding:"required"`
+type Personal struct {
+	Id int64 `form:"id" binding:"required"`
 }
-type UpdateStatus struct {
-	Id          int64  `form:"id" binding:"required"`
-	CheckStatus string `form:"checkstatus" binding:"required"`
+
+type UpdatePersonal struct {
+	Id            int64  `form:"id" binding:"required"`
+	Name          string `form:"name" binding:"required"`
+	NickName      string `form:"nick_name" binding:"required"`
+	Signature     string `form:"signature" binding:"required"`
+	Sex           string `form:"sex" binding:"required"`
+	Constellation string `form:"constellation" binding:"required"`
+	AvatorFileId  int64  `form:"avator_file_id" binding:"required"`
+	Mobile        string `form:"mobile" binding:"required"`
+	Age           int64  `form:"age" binding:"required"`
+	OnlineStatus  string `form:"online_status" binding:"required"`
 }
-type Realname struct {
-	UserId   int64  `form:"user_id" binding:"required"`
-	NickName string `form:"nick_name" binding:"required"`
-	Mobile   int64  `form:"mobile" binding:"required"`
-}
+
+//type UpdateStatus struct {
+//	Id          int64  `form:"id" binding:"required"`
+//	CheckStatus string `form:"checkstatus" binding:"required"`
+//}
+
+//type Realname struct {
+//	UserId   int64  `form:"user_id" binding:"required"`
+//	NickName string `form:"nick_name" binding:"required"`
+//	Mobile   int64  `form:"mobile" binding:"required"`
+//}

@@ -31,7 +31,7 @@ type Nacos struct {
 var AppConf Nacos
 
 func InitConfig() {
-	viper.SetConfigFile("../api_gateway/basic/appconfig/dev.yaml")
+	viper.SetConfigFile("../LiveStreaming_srv/basic/appconfig/dev.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic("配置文件读取失败")

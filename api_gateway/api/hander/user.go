@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 func Sendsms(c *gin.Context) {
@@ -111,8 +110,8 @@ func Login(c *gin.Context) {
 	})
 }
 
-func PublishContent(c *gin.Context) {
-	var req request.PublishContents
+func Personal(c *gin.Context) {
+	var req request.Personal
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 500,
@@ -130,26 +129,19 @@ func PublishContent(c *gin.Context) {
 
 	client := __.NewUserClient(conn)
 
-	content, _ := client.PublishContent(c, &__.PublishContentRequest{
-		UserId:      req.UserId,
-		Title:       req.Title,
-		Desc:        req.Desc,
-		MusicId:     req.MusicId,
-		WorkType:    req.WorkType,
-		CheckStatus: req.CheckStatus,
-		CheckUser:   req.CheckUser,
-		IpAddress:   req.IpAddress,
+	content, _ := client.Personal(c, &__.PersonalRequest{
+		Id: req.Id,
 	})
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"msg":  "发布成功",
+		"msg":  "个人信息展示成功",
 		"data": content,
 	})
 }
 
-func UpdateStatus(c *gin.Context) {
-	var req request.UpdateStatus
+func UpdatePersonal(c *gin.Context) {
+	var req request.UpdatePersonal
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 500,
@@ -167,45 +159,86 @@ func UpdateStatus(c *gin.Context) {
 
 	client := __.NewUserClient(conn)
 
-	client.UpdateStatus(c, &__.UpdateStatusRequest{
-		Id:          req.Id,
-		CheckStatus: req.CheckStatus,
+	personal, err := client.UpdatePersonal(c, &__.UpdatePersonalRequest{
+		Id:            req.Id,
+		Name:          req.Name,
+		NickName:      req.NickName,
+		Signature:     req.Signature,
+		Sex:           req.Sex,
+		Constellation: req.Constellation,
+		AvatorFileId:  req.AvatorFileId,
+		Mobile:        req.Mobile,
+		Age:           req.Age,
+		OnlineStatus:  req.OnlineStatus,
 	})
-
-	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"msg":  "审核成功",
-	})
-}
-
-func Realname(c *gin.Context) {
-
-	var req request.Realname
-	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 500,
-			"msg":  "参数验证失败",
-			"data": nil,
-		})
+	if err != nil {
 		return
 	}
 
-	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-
-	client := __.NewUserClient(conn)
-
-	client.RealName(c, &__.RealNameRequest{
-		Userid:   req.UserId,
-		NickName: req.NickName,
-		Mobile:   strconv.FormatInt(req.Mobile, 10),
-	})
-
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"msg":  "实名认证成功",
+		"data": personal,
 	})
 }
+
+//func UpdateStatus(c *gin.Context) {
+//	var req request.UpdateStatus
+//	if err := c.ShouldBind(&req); err != nil {
+//		c.JSON(http.StatusOK, gin.H{
+//			"code": 500,
+//			"msg":  "参数验证失败",
+//			"data": nil,
+//		})
+//		return
+//	}
+//
+//	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
+//	if err != nil {
+//		log.Fatalf("did not connect: %v", err)
+//	}
+//	defer conn.Close()
+//
+//	client := __.NewUserClient(conn)
+//
+//	client.UpdateStatus(c, &__.UpdateStatusRequest{
+//		Id:          req.Id,
+//		CheckStatus: req.CheckStatus,
+//	})
+//
+//	c.JSON(http.StatusOK, gin.H{
+//		"code": 200,
+//		"msg":  "审核成功",
+//	})
+//}
+
+//func Realname(c *gin.Context) {
+//
+//	var req request.Realname
+//	if err := c.ShouldBind(&req); err != nil {
+//		c.JSON(http.StatusOK, gin.H{
+//			"code": 500,
+//			"msg":  "参数验证失败",
+//			"data": nil,
+//		})
+//		return
+//	}
+//
+//	conn, err := grpc.NewClient("127.0.0.1:8300", grpc.WithTransportCredentials(insecure.NewCredentials()))
+//	if err != nil {
+//		log.Fatalf("did not connect: %v", err)
+//	}
+//	defer conn.Close()
+//
+//	client := __.NewUserClient(conn)
+//
+//	client.RealName(c, &__.RealNameRequest{
+//		Userid:   req.UserId,
+//		NickName: req.NickName,
+//		Mobile:   strconv.FormatInt(req.Mobile, 10),
+//	})
+//
+//	c.JSON(http.StatusOK, gin.H{
+//		"code": 200,
+//		"msg":  "实名认证成功",
+//	})
+//}

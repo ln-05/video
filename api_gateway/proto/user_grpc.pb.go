@@ -22,8 +22,10 @@ const (
 	User_SendSms_FullMethodName        = "/proto.User/SendSms"
 	User_Login_FullMethodName          = "/proto.User/Login"
 	User_PublishContent_FullMethodName = "/proto.User/PublishContent"
-	User_UpdateStatus_FullMethodName   = "/proto.User/UpdateStatus"
-	User_RealName_FullMethodName       = "/proto.User/RealName"
+	User_Personal_FullMethodName       = "/proto.User/Personal"
+	User_UpdatePersonal_FullMethodName = "/proto.User/UpdatePersonal"
+	User_ListWork_FullMethodName       = "/proto.User/ListWork"
+	User_InfoWork_FullMethodName       = "/proto.User/InfoWork"
 )
 
 // UserClient is the client API for User service.
@@ -33,8 +35,12 @@ type UserClient interface {
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error)
-	UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error)
-	RealName(ctx context.Context, in *RealNameRequest, opts ...grpc.CallOption) (*RealNameResponse, error)
+	// rpc UpdateStatus(UpdateStatusRequest) returns(UpdateStatusResponse);//审核状态
+	// rpc Personal(PersonalRequest) returns(PersonalResponse); // 实名认证
+	Personal(ctx context.Context, in *PersonalRequest, opts ...grpc.CallOption) (*PersonalResponse, error)
+	UpdatePersonal(ctx context.Context, in *UpdatePersonalRequest, opts ...grpc.CallOption) (*UpdatePersonalResponse, error)
+	ListWork(ctx context.Context, in *ListWorkRequest, opts ...grpc.CallOption) (*ListWorkResponse, error)
+	InfoWork(ctx context.Context, in *InfoWorkRequest, opts ...grpc.CallOption) (*InfoWorkResponse, error)
 }
 
 type userClient struct {
@@ -75,20 +81,40 @@ func (c *userClient) PublishContent(ctx context.Context, in *PublishContentReque
 	return out, nil
 }
 
-func (c *userClient) UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error) {
+func (c *userClient) Personal(ctx context.Context, in *PersonalRequest, opts ...grpc.CallOption) (*PersonalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateStatusResponse)
-	err := c.cc.Invoke(ctx, User_UpdateStatus_FullMethodName, in, out, cOpts...)
+	out := new(PersonalResponse)
+	err := c.cc.Invoke(ctx, User_Personal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) RealName(ctx context.Context, in *RealNameRequest, opts ...grpc.CallOption) (*RealNameResponse, error) {
+func (c *userClient) UpdatePersonal(ctx context.Context, in *UpdatePersonalRequest, opts ...grpc.CallOption) (*UpdatePersonalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RealNameResponse)
-	err := c.cc.Invoke(ctx, User_RealName_FullMethodName, in, out, cOpts...)
+	out := new(UpdatePersonalResponse)
+	err := c.cc.Invoke(ctx, User_UpdatePersonal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListWork(ctx context.Context, in *ListWorkRequest, opts ...grpc.CallOption) (*ListWorkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListWorkResponse)
+	err := c.cc.Invoke(ctx, User_ListWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) InfoWork(ctx context.Context, in *InfoWorkRequest, opts ...grpc.CallOption) (*InfoWorkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InfoWorkResponse)
+	err := c.cc.Invoke(ctx, User_InfoWork_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,8 +128,12 @@ type UserServer interface {
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error)
-	UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error)
-	RealName(context.Context, *RealNameRequest) (*RealNameResponse, error)
+	// rpc UpdateStatus(UpdateStatusRequest) returns(UpdateStatusResponse);//审核状态
+	// rpc Personal(PersonalRequest) returns(PersonalResponse); // 实名认证
+	Personal(context.Context, *PersonalRequest) (*PersonalResponse, error)
+	UpdatePersonal(context.Context, *UpdatePersonalRequest) (*UpdatePersonalResponse, error)
+	ListWork(context.Context, *ListWorkRequest) (*ListWorkResponse, error)
+	InfoWork(context.Context, *InfoWorkRequest) (*InfoWorkResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -120,11 +150,17 @@ func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResp
 func (UnimplementedUserServer) PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishContent not implemented")
 }
-func (UnimplementedUserServer) UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateStatus not implemented")
+func (UnimplementedUserServer) Personal(context.Context, *PersonalRequest) (*PersonalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Personal not implemented")
 }
-func (UnimplementedUserServer) RealName(context.Context, *RealNameRequest) (*RealNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RealName not implemented")
+func (UnimplementedUserServer) UpdatePersonal(context.Context, *UpdatePersonalRequest) (*UpdatePersonalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonal not implemented")
+}
+func (UnimplementedUserServer) ListWork(context.Context, *ListWorkRequest) (*ListWorkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListWork not implemented")
+}
+func (UnimplementedUserServer) InfoWork(context.Context, *InfoWorkRequest) (*InfoWorkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InfoWork not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -193,38 +229,74 @@ func _User_PublishContent_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UpdateStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateStatusRequest)
+func _User_Personal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UpdateStatus(ctx, in)
+		return srv.(UserServer).Personal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_UpdateStatus_FullMethodName,
+		FullMethod: User_Personal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UpdateStatus(ctx, req.(*UpdateStatusRequest))
+		return srv.(UserServer).Personal(ctx, req.(*PersonalRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_RealName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RealNameRequest)
+func _User_UpdatePersonal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).RealName(ctx, in)
+		return srv.(UserServer).UpdatePersonal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_RealName_FullMethodName,
+		FullMethod: User_UpdatePersonal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).RealName(ctx, req.(*RealNameRequest))
+		return srv.(UserServer).UpdatePersonal(ctx, req.(*UpdatePersonalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListWork(ctx, req.(*ListWorkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_InfoWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InfoWorkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).InfoWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_InfoWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).InfoWork(ctx, req.(*InfoWorkRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -249,12 +321,20 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_PublishContent_Handler,
 		},
 		{
-			MethodName: "UpdateStatus",
-			Handler:    _User_UpdateStatus_Handler,
+			MethodName: "Personal",
+			Handler:    _User_Personal_Handler,
 		},
 		{
-			MethodName: "RealName",
-			Handler:    _User_RealName_Handler,
+			MethodName: "UpdatePersonal",
+			Handler:    _User_UpdatePersonal_Handler,
+		},
+		{
+			MethodName: "ListWork",
+			Handler:    _User_ListWork_Handler,
+		},
+		{
+			MethodName: "InfoWork",
+			Handler:    _User_InfoWork_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
