@@ -9,16 +9,27 @@ import (
 func LoadRouter(r *gin.Engine) {
 	g := r.Group("/videouser")
 	{
-		g.POST("/sendsms", hander.Sendsms)
-		g.POST("/login", hander.Login)
-		g.Use(pkg.JWTAuth("2211a"))
-		g.POST("/publishContent", hander.PublishContent)
-		//g.POST("/updateStatus", hander.UpdateStatus)
-		//g.POST("/realname", hander.Realname)
-		g.POST("/personal", hander.Personal)
-		g.POST("/updatePersonal", hander.UpdatePersonal)
-		g.POST("/listWork", hander.ListWork)
-		g.POST("/infoWork", hander.InfoWork)
+		user := g.Group("/user")
+		{
+			user.POST("/sendsms", hander.Sendsms)
+			user.POST("/login", hander.Login)
+			user.Use(pkg.JWTAuth("2211a"))
+			user.POST("/personal", hander.Personal)
+			user.POST("/updatePersonal", hander.UpdatePersonal)
+		}
+
+		work := g.Group("/work")
+		{
+			work.POST("/publishContent", hander.PublishContent)
+			work.POST("/listWork", hander.ListWork)
+			work.POST("/infoWork", hander.InfoWork)
+		}
+
+		comment := g.Group("/comment")
+		{
+			comment.POST("/postComment", hander.PostComment)
+		}
+
 	}
 
 }

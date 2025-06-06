@@ -34,23 +34,6 @@ message PublishContentResponse {
   string status = 2;
 }
 
-//message UpdateStatusRequest {
-//  int64 id = 1;
-//  string check_status=6;
-//}
-//
-//message UpdateStatusResponse {
-//
-//}
-
-//message RealNameRequest {
-//  int64  userid = 1;
-//  string nick_name = 2;
-//  string mobile = 3;
-//}
-//
-//message RealNameResponse {
-//}
 
 message PersonalRequest {
   int64 Id = 1;
@@ -135,6 +118,19 @@ message InfoWorkResponse {
 }
 
 
+message PostCommentRequest {
+  int64 work_id = 1;
+  int64 user_id = 2;
+  string content = 3;
+  int32 tag = 4;
+  int64 pid = 5;
+}
+
+
+message PostCommentResponse {
+  bool success = 1;
+  string message = 2;
+}
 
 service User {
   rpc SendSms(SendSmsRequest) returns(SendSmsResponse);
@@ -146,4 +142,5 @@ service User {
   rpc UpdatePersonal(UpdatePersonalRequest) returns(UpdatePersonalResponse);//编辑个人信息
   rpc ListWork(ListWorkRequest) returns(ListWorkResponse);//翻看作品
   rpc InfoWork(InfoWorkRequest) returns(InfoWorkResponse);//作品详情
+  rpc PostComment(PostCommentRequest) returns(PostCommentResponse);//发布评论
 }
