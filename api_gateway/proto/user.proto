@@ -7,7 +7,6 @@ message SendSmsRequest {
   string mobile=1;
   string SendSmsCode=2;
 }
-
 message SendSmsResponse {
 
 }
@@ -16,12 +15,132 @@ message LoginRequest {
   string mobile=1;
   string SendSmsCode=2;
 }
-
 message LoginResponse {
   int64 Id= 1;
+}
+
+
+message PublishContentRequest {
+  string Title = 1;
+  string Desc = 2;
+  int64  MusicId = 3;
+  string WorkType=4;
+  string IpAddress=5;
+}
+
+
+message PublishContentResponse {
+  int64 content_id = 1;
+  string status = 2;
+}
+
+
+message PersonalRequest {
+  int64 Id = 1;
+}
+
+message PersonalResponse {
+  string name =1;
+  string nick_name=2;
+  string user_code=3;
+  string signature=4;
+  string sex =5;
+  string ip_address=6;
+  string constellation=7;
+  float attend_count=8;
+  float fans_count=9;
+  float zan_count=10;
+  int64 avator_file_id=11;
+  string authriry_info=12;
+  string mobile=13;
+  string real_name_auth=14;
+  int64 age=15;
+  string online_status= 16;
+  string authrity_type=17;
+  int64 level=18;
+  int64 balance=19;
+}
+
+message UpdatePersonalRequest {
+  int64 id = 1;
+  string name =2;
+  string nick_name=3;
+  string signature=4;
+  string sex =5;
+  string constellation=6;
+  int64 avator_file_id=7;
+  string mobile=8;
+  int64 age=9;
+  string online_status= 10;
+}
+
+message UpdatePersonalResponse {
+  int64 code = 1;
+  string message = 2;
+}
+
+
+message ListWorkRequest {
+  int64 Page = 1;
+  int64 Size = 2;
+}
+
+message ListWorkResponse {
+  repeated ListWork list=1;
+}
+
+message ListWork {
+  string Title=1;
+  string Desc=2;
+  int64 MusicId=3;
+  string WorkType=4;
+  string IpAddress=5;
+  int64 LikeCount=6;
+  int64 CommentCount=7;
+  int64 ShareCount=8;
+  int64 CollectCount=9;
+}
+
+
+message InfoWorkRequest {
+  int64 Id = 1;
+}
+message InfoWorkResponse {
+  string Title=1;
+  string Desc=2;
+  int64 MusicId=3;
+  string WorkType=4;
+  string IpAddress=5;
+  int64 LikeCount=6;
+  int64 CommentCount=7;
+  int64 ShareCount=8;
+  int64 CollectCount=9;
+}
+
+
+message PostCommentRequest {
+  int64 work_id = 1;
+  int64 user_id = 2;
+  string content = 3;
+  int32 tag = 4;
+  int64 pid = 5;
+}
+
+
+message PostCommentResponse {
+  bool success = 1;
+  string message = 2;
 }
 
 service User {
   rpc SendSms(SendSmsRequest) returns(SendSmsResponse);
   rpc Login(LoginRequest) returns(LoginResponse);
+  rpc PublishContent(PublishContentRequest) returns(PublishContentResponse);//发布作品
+  //  rpc UpdateStatus(UpdateStatusRequest) returns(UpdateStatusResponse);//审核状态
+  //  rpc Personal(PersonalRequest) returns(PersonalResponse); // 实名认证
+  rpc Personal(PersonalRequest) returns(PersonalResponse);//个人信息
+  rpc UpdatePersonal(UpdatePersonalRequest) returns(UpdatePersonalResponse);//编辑个人信息
+  rpc ListWork(ListWorkRequest) returns(ListWorkResponse);//翻看作品
+  rpc InfoWork(InfoWorkRequest) returns(InfoWorkResponse);//作品详情
+  rpc PostComment(PostCommentRequest) returns(PostCommentResponse);//发布评论
 }

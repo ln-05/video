@@ -19,8 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	User_SendSms_FullMethodName = "/proto.User/SendSms"
-	User_Login_FullMethodName   = "/proto.User/Login"
+	User_SendSms_FullMethodName        = "/proto.User/SendSms"
+	User_Login_FullMethodName          = "/proto.User/Login"
+	User_PublishContent_FullMethodName = "/proto.User/PublishContent"
+	User_Personal_FullMethodName       = "/proto.User/Personal"
+	User_UpdatePersonal_FullMethodName = "/proto.User/UpdatePersonal"
+	User_ListWork_FullMethodName       = "/proto.User/ListWork"
+	User_InfoWork_FullMethodName       = "/proto.User/InfoWork"
+	User_PostComment_FullMethodName    = "/proto.User/PostComment"
 )
 
 // UserClient is the client API for User service.
@@ -29,6 +35,12 @@ const (
 type UserClient interface {
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error)
+	Personal(ctx context.Context, in *PersonalRequest, opts ...grpc.CallOption) (*PersonalResponse, error)
+	UpdatePersonal(ctx context.Context, in *UpdatePersonalRequest, opts ...grpc.CallOption) (*UpdatePersonalResponse, error)
+	ListWork(ctx context.Context, in *ListWorkRequest, opts ...grpc.CallOption) (*ListWorkResponse, error)
+	InfoWork(ctx context.Context, in *InfoWorkRequest, opts ...grpc.CallOption) (*InfoWorkResponse, error)
+	PostComment(ctx context.Context, in *PostCommentRequest, opts ...grpc.CallOption) (*PostCommentResponse, error)
 }
 
 type userClient struct {
@@ -59,12 +71,78 @@ func (c *userClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) PublishContent(ctx context.Context, in *PublishContentRequest, opts ...grpc.CallOption) (*PublishContentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishContentResponse)
+	err := c.cc.Invoke(ctx, User_PublishContent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Personal(ctx context.Context, in *PersonalRequest, opts ...grpc.CallOption) (*PersonalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalResponse)
+	err := c.cc.Invoke(ctx, User_Personal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdatePersonal(ctx context.Context, in *UpdatePersonalRequest, opts ...grpc.CallOption) (*UpdatePersonalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePersonalResponse)
+	err := c.cc.Invoke(ctx, User_UpdatePersonal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListWork(ctx context.Context, in *ListWorkRequest, opts ...grpc.CallOption) (*ListWorkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListWorkResponse)
+	err := c.cc.Invoke(ctx, User_ListWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) InfoWork(ctx context.Context, in *InfoWorkRequest, opts ...grpc.CallOption) (*InfoWorkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InfoWorkResponse)
+	err := c.cc.Invoke(ctx, User_InfoWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) PostComment(ctx context.Context, in *PostCommentRequest, opts ...grpc.CallOption) (*PostCommentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostCommentResponse)
+	err := c.cc.Invoke(ctx, User_PostComment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error)
+	Personal(context.Context, *PersonalRequest) (*PersonalResponse, error)
+	UpdatePersonal(context.Context, *UpdatePersonalRequest) (*UpdatePersonalResponse, error)
+	ListWork(context.Context, *ListWorkRequest) (*ListWorkResponse, error)
+	InfoWork(context.Context, *InfoWorkRequest) (*InfoWorkResponse, error)
+	PostComment(context.Context, *PostCommentRequest) (*PostCommentResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -77,6 +155,24 @@ func (UnimplementedUserServer) SendSms(context.Context, *SendSmsRequest) (*SendS
 }
 func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServer) PublishContent(context.Context, *PublishContentRequest) (*PublishContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishContent not implemented")
+}
+func (UnimplementedUserServer) Personal(context.Context, *PersonalRequest) (*PersonalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Personal not implemented")
+}
+func (UnimplementedUserServer) UpdatePersonal(context.Context, *UpdatePersonalRequest) (*UpdatePersonalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonal not implemented")
+}
+func (UnimplementedUserServer) ListWork(context.Context, *ListWorkRequest) (*ListWorkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListWork not implemented")
+}
+func (UnimplementedUserServer) InfoWork(context.Context, *InfoWorkRequest) (*InfoWorkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InfoWork not implemented")
+}
+func (UnimplementedUserServer) PostComment(context.Context, *PostCommentRequest) (*PostCommentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostComment not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -127,6 +223,114 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_PublishContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).PublishContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_PublishContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).PublishContent(ctx, req.(*PublishContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Personal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Personal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Personal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Personal(ctx, req.(*PersonalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdatePersonal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdatePersonal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdatePersonal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdatePersonal(ctx, req.(*UpdatePersonalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListWork(ctx, req.(*ListWorkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_InfoWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InfoWorkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).InfoWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_InfoWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).InfoWork(ctx, req.(*InfoWorkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_PostComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).PostComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_PostComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).PostComment(ctx, req.(*PostCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +345,30 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _User_Login_Handler,
+		},
+		{
+			MethodName: "PublishContent",
+			Handler:    _User_PublishContent_Handler,
+		},
+		{
+			MethodName: "Personal",
+			Handler:    _User_Personal_Handler,
+		},
+		{
+			MethodName: "UpdatePersonal",
+			Handler:    _User_UpdatePersonal_Handler,
+		},
+		{
+			MethodName: "ListWork",
+			Handler:    _User_ListWork_Handler,
+		},
+		{
+			MethodName: "InfoWork",
+			Handler:    _User_InfoWork_Handler,
+		},
+		{
+			MethodName: "PostComment",
+			Handler:    _User_PostComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
